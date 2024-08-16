@@ -59,3 +59,16 @@ vim.opt.updatetime = 50
 vim.opt.textwidth = 80
 vim.opt.wrapmargin = 2
 vim.wo.colorcolumn = "80"
+
+local quarto = require("quarto")
+quarto.setup()
+vim.keymap.set("n", "<leader>qp", quarto.quartoPreview, {
+  silent = true,
+  noremap = true,
+  desc = "Open Quarto Preview",
+})
+vim.keymap.set("n", "<leader>qcp", quarto.quartoClosePreview, {
+  silent = true,
+  noremap = true,
+  desc = "Close Quarto Preview",
+})
