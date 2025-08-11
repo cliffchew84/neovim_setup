@@ -31,6 +31,11 @@ vim.keymap.set("v", "`", "0")
 vim.keymap.set("v", "0", "$")
 vim.keymap.set("n", "0", "$")
 
+vim.keymap.set("n", "<leader>q", ":q<CR>")
+vim.keymap.set("n", "<leader>w", ":w<CR>")
+vim.keymap.set("n", "<leader>c", "<C-w>c", { desc = "Close current window" })
+vim.keymap.set("n", "<leader>o", ":only<CR>", { desc = "Close other windows" })
+
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
@@ -57,5 +62,4 @@ vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
 vim.opt.textwidth = 80
-vim.opt.wrapmargin = 2
 vim.wo.colorcolumn = "80"
