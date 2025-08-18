@@ -61,11 +61,11 @@ vim.opt.textwidth = 80
 vim.wo.colorcolumn = "80"
 
 -- Set the color of all line numbers (LineNr)
-vim.api.nvim_set_hl(0, "LineNr", { fg = "#A0A0A0" }) -- Example: light grey
+-- vim.api.nvim_set_hl(0, "LineNr", { fg = "#A0A0A0" }) -- Example: light grey
 
 -- Set the color of the line number on the current line (CursorLineNr)
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FFFFFF", bold = true }) -- Example: white and bold
+-- vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FFFFFF", bold = true }) -- Example: white and bold
 
 -- If using relative line numbers, set colors for LineNrAbove and LineNrBelow
-vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#FFA07A" }) -- Example: light orange
-vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#98FB98" }) -- Example: pale green
+vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#87CEEB" }) -- Example: light orange
+vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#228B22" }) -- Example: pale green
