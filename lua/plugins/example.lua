@@ -127,6 +127,7 @@ return {
         "lua",
         "markdown",
         "markdown_inline",
+        "sql",
         "python",
         "query",
         "regex",
