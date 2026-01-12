@@ -61,6 +61,15 @@ vim.opt.updatetime = 50
 vim.opt.textwidth = 80
 vim.wo.colorcolumn = "80"
 
+-- Do not hide any codebox start/end
+vim.g.markdown_conceal_code_blocks = 0
+vim.g.indentLine_fileTypeExclude = { "markdown" }
+
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = "*.md",
+  command = "setlocal conceallevel=0",
+})
+
 -- Set the color of all line numbers (LineNr)
 -- vim.api.nvim_set_hl(0, "LineNr", { fg = "#A0A0A0" }) -- Example: light grey
 
