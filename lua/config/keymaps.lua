@@ -1,7 +1,3 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
-
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
 -- Needed for highlighting and shifting code up and down
@@ -31,6 +27,11 @@ vim.keymap.set("v", "`", "0")
 vim.keymap.set("v", "0", "$")
 vim.keymap.set("n", "0", "$")
 
+vim.keymap.set("n", "<leader>q", ":q<CR>")
+vim.keymap.set("n", "<leader>w", ":w<CR>")
+vim.keymap.set("n", "<leader>c", "<C-w>c", { desc = "Close current window" })
+vim.keymap.set("n", "<leader>o", ":only<CR>", { desc = "Close other windows" })
+
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
@@ -54,8 +55,27 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
+vim.opt_local.conceallevel = 0
 
 vim.opt.updatetime = 50
 vim.opt.textwidth = 80
-vim.opt.wrapmargin = 2
 vim.wo.colorcolumn = "80"
+
+-- Do not hide any codebox start/end
+vim.g.markdown_conceal_code_blocks = 0
+vim.g.indentLine_fileTypeExclude = { "markdown" }
+
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = "*.md",
+  command = "setlocal conceallevel=0",
+})
+
+-- Set the color of all line numbers (LineNr)
+-- vim.api.nvim_set_hl(0, "LineNr", { fg = "#A0A0A0" }) -- Example: light grey
+
+-- Set the color of the line number on the current line (CursorLineNr)
+-- vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FFFFFF", bold = true }) -- Example: white and bold
+
+-- If using relative line numbers, set colors for LineNrAbove and LineNrBelow
+vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#87CEEB" }) -- Example: light orange
+vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#228B22" }) -- Example: pale green
