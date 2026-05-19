@@ -3,6 +3,9 @@ return {
   {
     "mfussenegger/nvim-lint",
     opts = {
+      linters_by_ft = {
+        yaml = { "yamllint" },
+      },
       linters = {
         ["markdownlint-cli2"] = {
           args = { "--config", vim.fn.expand("~/.markdownlint-cli2.yaml"), "-" },
@@ -16,7 +19,7 @@ return {
     "mason-org/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { "markdownlint", "markdownlint-cli2", "prettier", "ruff", "sqlfluff" })
+      vim.list_extend(opts.ensure_installed, { "markdownlint", "markdownlint-cli2", "prettier", "ruff", "sqlfluff", "yamllint" })
     end,
   },
 
@@ -42,6 +45,7 @@ return {
       formatters_by_ft = {
         python = { "ruff_format", "ruff_organize_imports" },
         sql = { "sqlfluff" },
+        yaml = { "prettier" },
       },
     },
   },
