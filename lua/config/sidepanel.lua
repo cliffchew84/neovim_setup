@@ -4,6 +4,20 @@ require("neo-tree").setup({
     relativenumber = false,
   },
   filesystem = {
+    commands = {
+      delete = function(state)
+        local inputs = require("neo-tree.ui.inputs")
+        local node = state.tree:get_node()
+        local path = node.path
+        inputs.confirm("Trash " .. node.name .. "?", function(confirmed)
+          if not confirmed then return end
+          vim.fn.system({ "osascript", "-e",
+            'tell application "Finder" to delete POSIX file "' .. path .. '"'
+          })
+          require("neo-tree.sources.manager").refresh(state.source_name)
+        end)
+      end,
+    },
     window = {
       mappings = {
         ["x"] = "cut_to_clipboard",
