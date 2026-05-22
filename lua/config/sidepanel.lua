@@ -3,6 +3,14 @@ require("neo-tree").setup({
     number = true,
     relativenumber = false,
   },
+  filesystem = {
+    window = {
+      mappings = {
+        ["x"] = "cut_to_clipboard",
+        ["p"] = "paste_from_clipboard",
+      },
+    },
+  },
   event_handlers = {
     {
       event = "neo_tree_buffer_enter",
