@@ -19,7 +19,7 @@ return {
     "mason-org/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { "markdownlint", "markdownlint-cli2", "prettier", "ruff", "sqlfluff", "yamllint" })
+      vim.list_extend(opts.ensure_installed, { "markdownlint", "markdownlint-cli2", "prettier", "ruff", "yamllint" })
     end,
   },
 
@@ -28,11 +28,6 @@ return {
     "stevearc/conform.nvim",
     opts = {
       formatters = {
-        ["markdownlint-cli2"] = {
-          condition = function()
-            return true
-          end,
-        },
         prettier = {
           prepend_args = function(self, ctx)
             if vim.bo[ctx.buf].filetype == "markdown" then
@@ -44,7 +39,6 @@ return {
       },
       formatters_by_ft = {
         python = { "ruff_format", "ruff_organize_imports" },
-        sql = { "sqlfluff" },
         yaml = { "prettier" },
       },
     },
