@@ -22,6 +22,11 @@ require("neo-tree").setup({
       mappings = {
         ["x"] = "cut_to_clipboard",
         ["p"] = "paste_from_clipboard",
+        ["gy"] = function(state)
+          local node = state.tree:get_node()
+          vim.fn.setreg("+", node.path)
+          vim.notify("Copied: " .. node.path)
+        end,
       },
     },
   },
