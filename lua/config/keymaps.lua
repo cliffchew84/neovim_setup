@@ -58,8 +58,8 @@ vim.opt.isfname:append("@-@")
 vim.opt_local.conceallevel = 0
 
 vim.opt.updatetime = 50
-vim.opt.textwidth = 80
-vim.wo.colorcolumn = "80"
+vim.opt.textwidth = 120
+vim.wo.colorcolumn = "120"
 
 -- Do not hide any codebox start/end
 vim.g.markdown_conceal_code_blocks = 0
