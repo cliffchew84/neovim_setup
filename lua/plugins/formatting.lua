@@ -19,7 +19,7 @@ return {
     "mason-org/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { "markdownlint", "markdownlint-cli2", "prettier", "ruff", "yamllint" })
+      vim.list_extend(opts.ensure_installed, { "markdownlint", "markdownlint-cli2", "prettier", "ruff", "sqlfluff", "yamllint" })
     end,
   },
 
@@ -39,6 +39,7 @@ return {
       },
       formatters_by_ft = {
         python = { "ruff_format", "ruff_organize_imports" },
+        sql = { "sqlfluff" },
         yaml = { "prettier" },
       },
     },
