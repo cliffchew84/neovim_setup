@@ -60,6 +60,13 @@ Personal [LazyVim](https://lazyvim.github.io/installation) setup with additional
 - Streams output to a right sidebar
 - Auto-extracts first code block and applies it back to the original file
 
+### Terminal
+- `<leader>tt` opens a terminal **below the code panel** (not below the sidebar), in the current directory; pressing it again reuses the same one
+- `<leader>th` **hides/shows** it — the shell and anything running in it keep going, and `<leader>th` brings it straight back
+- `<leader>tq` **quits** it — kills the shell and whatever it started, then forgets it (next `<leader>tt` is fresh); typing `exit` in the shell does the same
+- `Esc` `Esc` leaves terminal mode (press the two `Esc` quickly — a slow pair lets the first one reach the shell) — while in terminal mode every key goes to the shell, so this step is what lets `<C-h/j/k/l>` move between sidebar, code and terminal, and what makes `<leader>th` / `<leader>tq` (normal-mode keys) reachable again when the terminal has focus; press `i` to type again
+- With no file open the code panel shows the LazyVim dashboard, so `<leader>tt` never leaves a blank `[No Name]` above the terminal (see `lua/config/empty_slot.lua`)
+
 ### Keymaps
 | Key | Mode | Action |
 |-----|------|--------|
@@ -71,6 +78,10 @@ Personal [LazyVim](https://lazyvim.github.io/installation) setup with additional
 | `<leader>p` | Visual | Paste without overwriting register |
 | `<leader>y` / `Y` | Normal/Visual | Yank to system clipboard |
 | `<leader>o` | Normal | Close other windows |
+| `<leader>tt` | Normal | Open terminal below the code panel (current dir) |
+| `<leader>th` | Normal | Hide/show terminal (shell keeps running) |
+| `<leader>tq` | Normal | Quit terminal and kill its process |
+| `Esc` `Esc` | Terminal | Leave terminal mode |
 
 ### Editor Options
 - Relative line numbers (above = sky blue, below = green)

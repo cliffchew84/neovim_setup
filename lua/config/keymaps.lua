@@ -32,3 +32,11 @@ vim.keymap.set("n", "0", "$")
 -- Close-window is LazyVim's `<leader>wd` (= <C-w>c); a `<leader>c` mapping here
 -- only shadowed the `code` group label.
 vim.keymap.set("n", "<leader>o", ":only<CR>", { desc = "Close other windows" })
+
+-- Bottom terminal: opens below the code panel, never below the sidebar.
+-- The implementation lives in lua/config/terminal.lua.
+local term = require("config.terminal")
+vim.keymap.set("n", "<leader>tt", term.open, { desc = "Open terminal (below, current dir)" })
+vim.keymap.set("n", "<leader>th", term.toggle, { desc = "Hide/show terminal (process keeps running)" })
+vim.keymap.set("n", "<leader>tq", term.close, { desc = "Quit terminal (kills its process)" })
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
