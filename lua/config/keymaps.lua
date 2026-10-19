@@ -27,8 +27,8 @@ vim.keymap.set("v", "`", "0")
 vim.keymap.set("v", "0", "$")
 vim.keymap.set("n", "0", "$")
 
-vim.keymap.set("n", "<leader>q", ":q<CR>")
-vim.keymap.set("n", "<leader>w", ":w<CR>")
+-- Save/quit use native `:w` / `:q` (same keystroke count as a leader map, and
+-- `<leader>w`/`<leader>q` shadow LazyVim's windows / quit-session groups).
 -- Close-window is LazyVim's `<leader>wd` (= <C-w>c); a `<leader>c` mapping here
 -- only shadowed the `code` group label.
 vim.keymap.set("n", "<leader>o", ":only<CR>", { desc = "Close other windows" })

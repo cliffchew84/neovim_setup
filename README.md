@@ -70,7 +70,6 @@ Personal [LazyVim](https://lazyvim.github.io/installation) setup with additional
 | `0` | Normal/Visual | Go to line end (`$`) |
 | `<leader>p` | Visual | Paste without overwriting register |
 | `<leader>y` / `Y` | Normal/Visual | Yank to system clipboard |
-| `<leader>w` / `q` | Normal | Save / quit |
 | `<leader>o` | Normal | Close other windows |
 
 ### Editor Options
