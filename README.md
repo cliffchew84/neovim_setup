@@ -18,7 +18,7 @@ Personal [LazyVim](https://lazyvim.github.io/installation) setup with additional
 | Plugin | Purpose | Key bindings |
 |--------|---------|--------------|
 | `kdheepak/lazygit.nvim` | Full LazyGit TUI | `<leader>lg` |
-| `sindrets/diffview.nvim` | Git diff/history viewer | `<leader>gd` open, `<leader>gD` close, `<leader>gh` file history |
+| `sindrets/diffview.nvim` | Git diff/history viewer | `<leader>gv` open, `<leader>gV` close, `<leader>gH` file history |
 
 ### File Types & Viewing
 | Plugin | Purpose | Key bindings |
@@ -30,7 +30,6 @@ Personal [LazyVim](https://lazyvim.github.io/installation) setup with additional
 | Plugin | Purpose |
 |--------|---------|
 | `geg2102/nvim-jupyter-client` | Edit `.ipynb` natively; cell ops via `<leader>j*` |
-| `goerz/jupytext.vim` | Sync notebooks as `py:percent` format |
 | `quarto-dev/quarto-nvim` + `otter.nvim` | Quarto/RMarkdown with LSP for Python, R, SQL |
 
 ### UI
@@ -40,13 +39,12 @@ Personal [LazyVim](https://lazyvim.github.io/installation) setup with additional
 | `nvim-lualine/lualine.nvim` | Custom statusline: mode, branch, diff, diagnostics, filename, filetype |
 
 ### Formatting & Linting
-- **Linters**: `yamllint` (YAML), `markdownlint-cli2` (Markdown, reads `~/.markdownlint-cli2.yaml`)
+- **Linters**: `yamllint` (YAML), `markdownlint-cli2` (Markdown; auto-discovers a project `.markdownlint-cli2.*` config)
 - **Formatters via conform.nvim**:
   - Python → `ruff_format` + `ruff_organize_imports`
-  - SQL → `sqlfluff`
   - YAML → `prettier`
   - Markdown → `prettier` (`--prose-wrap always --print-width 120`)
-- **Mason auto-installs**: `markdownlint`, `markdownlint-cli2`, `prettier`, `ruff`, `sqlfluff`, `yamllint`
+- **Mason auto-installs** (added by this config): `markdownlint`, `prettier`, `ruff`, `yamllint`
 
 ---
 
@@ -73,12 +71,12 @@ Personal [LazyVim](https://lazyvim.github.io/installation) setup with additional
 | `<leader>p` | Visual | Paste without overwriting register |
 | `<leader>y` / `Y` | Normal/Visual | Yank to system clipboard |
 | `<leader>w` / `q` | Normal | Save / quit |
-| `<leader>c` / `o` | Normal | Close window / close other windows |
+| `<leader>o` | Normal | Close other windows |
 
 ### Editor Options
 - Relative line numbers (above = sky blue, below = green)
 - Tab = 4 spaces, `expandtab`
-- `colorcolumn` + `textwidth` = 80
+- `colorcolumn` + `textwidth` = 120
 - `scrolloff` = 8
 - No swapfile/backup; persistent undo at `~/.vim/undodir`
 - `conceallevel=0` globally for Markdown
@@ -97,13 +95,11 @@ Personal [LazyVim](https://lazyvim.github.io/installation) setup with additional
 ### Python Packages
 | Package | Why |
 |---------|-----|
-| `jupytext` | `jupytext.vim` converts notebooks |
 | `jupyter` / `ipykernel` | `nvim-jupyter-client` kernel execution |
 
 ### Config Files & Directories
 | Path | Why |
 |------|-----|
-| `~/.markdownlint-cli2.yaml` | markdownlint-cli2 rule config |
 | `~/.vim/undodir/` | Persistent undo — create with `mkdir -p ~/.vim/undodir` |
 
 ### macOS Only

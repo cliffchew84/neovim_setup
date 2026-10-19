@@ -29,53 +29,6 @@ vim.keymap.set("n", "0", "$")
 
 vim.keymap.set("n", "<leader>q", ":q<CR>")
 vim.keymap.set("n", "<leader>w", ":w<CR>")
-vim.keymap.set("n", "<leader>c", "<C-w>c", { desc = "Close current window" })
+-- Close-window is LazyVim's `<leader>wd` (= <C-w>c); a `<leader>c` mapping here
+-- only shadowed the `code` group label.
 vim.keymap.set("n", "<leader>o", ":only<CR>", { desc = "Close other windows" })
-
-vim.opt.nu = true
-vim.opt.relativenumber = true
-
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
-
-vim.opt.smartindent = true
-vim.opt.wrap = false
-
-vim.opt.swapfile = false
-vim.opt.backup = false
-vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
-vim.opt.undofile = true
-
-vim.opt.hlsearch = false
-vim.opt.incsearch = true
-vim.opt.termguicolors = true
-
-vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes"
-vim.opt.isfname:append("@-@")
-vim.opt_local.conceallevel = 0
-
-vim.opt.updatetime = 50
-vim.opt.textwidth = 120
-vim.wo.colorcolumn = "120"
-
--- Do not hide any codebox start/end
-vim.g.markdown_conceal_code_blocks = 0
-vim.g.indentLine_fileTypeExclude = { "markdown" }
-
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-  pattern = "*.md",
-  command = "setlocal conceallevel=0",
-})
-
--- Set the color of all line numbers (LineNr)
--- vim.api.nvim_set_hl(0, "LineNr", { fg = "#A0A0A0" }) -- Example: light grey
-
--- Set the color of the line number on the current line (CursorLineNr)
--- vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FFFFFF", bold = true }) -- Example: white and bold
-
--- If using relative line numbers, set colors for LineNrAbove and LineNrBelow
-vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#87CEEB" }) -- Example: light orange
-vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#228B22" }) -- Example: pale green

@@ -4,7 +4,6 @@ return {
     ft = { "quarto", "markdown" },
     dependencies = {
       "jmbuhr/otter.nvim",
-      "nvim-treesitter/nvim-treesitter",
     },
     opts = {
       lspFeatures = {
@@ -19,9 +18,19 @@ return {
         },
       },
     },
-  },
-  {
-    "jmbuhr/otter.nvim",
-    opts = {},
+    keys = {
+      {
+        "<leader>qp",
+        "<cmd>QuartoPreview<cr>",
+        desc = "Open Quarto Preview",
+        ft = { "quarto", "markdown" },
+      },
+      {
+        "<leader>qc",
+        "<cmd>QuartoClosePreview<cr>",
+        desc = "Close Quarto Preview",
+        ft = { "quarto", "markdown" },
+      },
+    },
   },
 }

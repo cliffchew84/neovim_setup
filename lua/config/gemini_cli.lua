@@ -32,6 +32,15 @@ vim.api.nvim_create_user_command("Gemini", function(opts)
   local original_buf = vim.api.nvim_get_current_buf()
   local start_pos = vim.fn.getpos("'<")
   local end_pos = vim.fn.getpos("'>")
+
+  -- `'<`/`'>` are unset (line 0) when no visual selection has ever been made.
+  -- Without this guard the command sends an empty snippet and then writes the
+  -- result back over an invalid range, mangling the file.
+  if start_pos[2] == 0 or end_pos[2] == 0 then
+    vim.notify("Gemini: select some code first (visual mode, then :Gemini).", vim.log.levels.WARN)
+    return
+  end
+
   local start_line = start_pos[2] - 1
   local end_line = end_pos[2]
 
@@ -131,4 +140,4 @@ vim.api.nvim_create_user_command("Gemini", function(opts)
       end
     end,
   })
-end, { range = true, nargs = 1 })
+end, { range = true, nargs = "+" })

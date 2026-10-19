@@ -1,26 +1,22 @@
 return {
-  -- Pass config explicitly since nvim-lint runs markdownlint-cli2 via stdin (no filesystem access)
+  -- markdownlint-cli2 auto-discovers `.markdownlint-cli2.yaml` from the buffer's
+  -- directory (and works over stdin), so no explicit --config is needed.
   {
     "mfussenegger/nvim-lint",
     opts = {
       linters_by_ft = {
         yaml = { "yamllint" },
       },
-      linters = {
-        ["markdownlint-cli2"] = {
-          args = { "--config", vim.fn.expand("~/.markdownlint-cli2.yaml"), "-" },
-        },
-      },
     },
   },
 
   -- Add markdownlint to mason so it's always available
+  -- mason's spec declares opts_extend = { "ensure_installed" }, so this merges with LazyVim's list
   {
     "mason-org/mason.nvim",
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, { "markdownlint", "markdownlint-cli2", "prettier", "ruff", "yamllint" })
-    end,
+    opts = {
+      ensure_installed = { "markdownlint", "prettier", "ruff", "yamllint" },
+    },
   },
 
   -- Configure conform to use appropriate fixers/formatters on save
