@@ -1,9 +1,10 @@
 return {
   "geg2102/nvim-jupyter-client",
-  -- Neovim's filetype detection assigns `json` to `.ipynb` (there is no built-in
-  -- `ipynb` filetype), so `json` is what loads this plugin when a notebook is
-  -- opened; the plugin then re-tags the buffer as `python`.
-  ft = { "json" },
+  -- Only load for notebooks. They are detected as `json`, and `ft = { "json" }`
+  -- used to load this for every JSON file (package.json, lazy-lock.json, ...).
+  -- BufReadPre fires before filetype detection and before the plugin's own
+  -- BufReadPost/BufEnter handlers, so initialization still happens.
+  event = { "BufReadPre *.ipynb", "BufNewFile *.ipynb" },
   config = function()
     require("nvim-jupyter-client").setup({
       -- Optional custom template for new notebooks

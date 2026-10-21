@@ -16,8 +16,8 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    { import = "lazyvim.plugins.extras.lang.python" },
-    { import = "lazyvim.plugins.extras.lang.markdown" },
+    -- Extras are enabled in lazyvim.json (via :LazyExtras) so that the extras
+    -- UI reflects the actual state. Do not import them manually here.
     { import = "plugins" },
   },
   defaults = { lazy = true, version = false },

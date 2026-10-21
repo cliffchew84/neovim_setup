@@ -2,13 +2,6 @@
 -- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
 -- Add any additional autocmds here
 
--- Markdown renders without conceal (options.lua already sets conceallevel=0
--- globally; this also covers files opened before VeryLazy, e.g. `nvim foo.md`).
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-  pattern = "*.md",
-  command = "setlocal conceallevel=0",
-})
-
 -- The editor slot (the panel holding your files, i.e. not the sidebar and not
 -- the terminal) is left as a bare [No Name] placeholder when you start with a
 -- folder, see lua/config/empty_slot.lua. Fill it with the dashboard instead.

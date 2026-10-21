@@ -1,0 +1,6 @@
+default: true
+# Prose notes are transcribed one paragraph per line, so enforcing a hard
+# line length is noise. textwidth/colorcolumn already give a 120-col guide.
+# (Swap `false` for `{line_length: 120}` to enforce 120 columns instead.)
+config:
+  MD013: false

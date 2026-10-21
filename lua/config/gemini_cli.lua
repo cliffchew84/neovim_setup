@@ -79,63 +79,115 @@ vim.api.nvim_create_user_command("Gemini", function(opts)
     filetype
   )
 
-  local safe_prompt = vim.fn.shellescape(final_prompt)
-  local cmd = string.format("cat %s | env -u GEMINI_API_KEY gemini prompt %s", tmp_file, safe_prompt)
+  -- Non-interactive mode is `-p/--prompt`, not a `prompt` subcommand (that now
+  -- just becomes a query and drops into the interactive TUI, which would never
+  -- return from a job).
+  local cmd = string.format(
+    "cat %s | env -u GEMINI_API_KEY gemini --skip-trust -p %s",
+    vim.fn.shellescape(tmp_file),
+    vim.fn.shellescape(final_prompt)
+  )
 
   -- 5. RUN ASYNC JOB
   local output_lines = {}
 
+  -- jobstart delivers chunks, and the first/last entry of a chunk can be a
+  -- partial line. Stitch each stream back together so long lines (and the
+  -- extracted code block) are not split in two.
+  local function line_splitter()
+    local pending = ""
+    return {
+      feed = function(data)
+        if not data or #data == 0 then
+          return {}
+        end
+        data[1] = pending .. data[1]
+        pending = data[#data]
+        return vim.list_slice(data, 1, #data - 1)
+      end,
+      flush = function()
+        if pending == "" then
+          return nil
+        end
+        local line = pending
+        pending = ""
+        return line
+      end,
+    }
+  end
+
+  local stdout = line_splitter()
+  local stderr = line_splitter()
+
+  local function add_to_sidebar(lines)
+    if #lines == 0 or not vim.api.nvim_buf_is_valid(sidebar_buf) then
+      return
+    end
+    local count = vim.api.nvim_buf_line_count(sidebar_buf)
+    vim.api.nvim_buf_set_lines(sidebar_buf, count, -1, false, lines)
+    pcall(vim.api.nvim_win_set_cursor, sidebar_win, { vim.api.nvim_buf_line_count(sidebar_buf), 0 })
+  end
+
+  local function is_noise(line)
+    return line:match("Loaded cached credentials") ~= nil or line:match("%[STARTUP%]") ~= nil
+  end
+
+  local function append_stdout(data)
+    local lines = stdout.feed(data)
+    if #lines > 0 then
+      vim.list_extend(output_lines, lines)
+      add_to_sidebar(lines)
+    end
+  end
+
+  local function append_stderr(data)
+    local lines = {}
+    for _, line in ipairs(stderr.feed(data)) do
+      if line ~= "" and not is_noise(line) then
+        lines[#lines + 1] = "> ⚠ ERROR: " .. line
+      end
+    end
+    add_to_sidebar(lines)
+  end
+
   vim.fn.jobstart(cmd, {
     on_stdout = function(_, data)
-      if data then
-        for _, line in ipairs(data) do
-          table.insert(output_lines, line)
-        end
-        local current_lines = vim.api.nvim_buf_line_count(sidebar_buf)
-        vim.api.nvim_buf_set_lines(sidebar_buf, current_lines, -1, false, data)
-        pcall(vim.api.nvim_win_set_cursor, sidebar_win, { vim.api.nvim_buf_line_count(sidebar_buf), 0 })
-      end
+      append_stdout(data)
     end,
 
-    -- THE FIX: Filter out noisy logs
     on_stderr = function(_, data)
-      if data then
-        for _, line in ipairs(data) do
-          if line ~= "" then
-            -- Check if this line is just a debug log
-            local is_noise = line:match("Loaded cached credentials") or line:match("%[STARTUP%]")
-
-            if not is_noise then
-              local count = vim.api.nvim_buf_line_count(sidebar_buf)
-              vim.api.nvim_buf_set_lines(sidebar_buf, count, -1, false, { "> ⚠ ERROR: " .. line })
-            end
-          end
-        end
-      end
+      append_stderr(data)
     end,
 
     on_exit = function(_, exit_code)
       os.remove(tmp_file)
 
+      -- flush a final line that arrived without a trailing newline
+      local tail = stdout.flush()
+      if tail then
+        output_lines[#output_lines + 1] = tail
+        add_to_sidebar({ tail })
+      end
+      local err_tail = stderr.flush()
+      if err_tail and not is_noise(err_tail) then
+        add_to_sidebar({ "> ⚠ ERROR: " .. err_tail })
+      end
+
       if exit_code == 0 then
         local code_block = extract_code_block(output_lines)
         vim.schedule(function()
-          if code_block then
+          if not vim.api.nvim_buf_is_valid(original_buf) then
+            add_to_sidebar({ "", "⚠ Original buffer was closed; nothing applied." })
+          elseif code_block then
             vim.api.nvim_buf_set_lines(original_buf, start_line, end_line, false, code_block)
-            vim.api.nvim_buf_set_lines(sidebar_buf, -1, -1, false, { "", "✔ CODE APPLIED to original file." })
+            add_to_sidebar({ "", "✔ CODE APPLIED to original file." })
           else
-            vim.api.nvim_buf_set_lines(
-              sidebar_buf,
-              -1,
-              -1,
-              false,
-              { "", "⚠ NO CODE BLOCK found. Original file left unchanged." }
-            )
+            add_to_sidebar({ "", "⚠ NO CODE BLOCK found. Original file left unchanged." })
           end
         end)
       else
         vim.schedule(function()
-          vim.api.nvim_buf_set_lines(sidebar_buf, -1, -1, false, { "", "✘ FAILED. See error details above." })
+          add_to_sidebar({ "", "✘ FAILED. See error details above." })
         end)
       end
     end,
