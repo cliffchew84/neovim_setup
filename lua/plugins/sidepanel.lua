@@ -4,68 +4,42 @@
 -- window mappings, event handlers). Defining it as a normal plugin `opts`
 -- table lets lazy.nvim deep-merge it with LazyVim's spec instead.
 
--- Moves each path to the Trash via Finder, one at a time.
--- NOTE: neo-tree's built-in trash command does not work on this machine:
--- /usr/bin/trash rejects the `--` separator neo-tree passes, so the command
--- reports failure even though it removes the file.
-local function trash(paths, on_done)
-  local function step(i)
-    if i > #paths then
-      if on_done then
-        on_done()
-      end
-      return
-    end
-    local escaped = paths[i]:gsub('"', '\\"')
-    vim.system(
-      { "osascript", "-e", 'tell application "Finder" to delete POSIX file "' .. escaped .. '"' },
-      { text = true },
-      function()
-        step(i + 1)
-      end
-    )
+-- Neo-tree's default macOS trash chain starts with `trash --`. The
+-- /usr/bin/trash on this machine rejects the `--` separator, and neo-tree
+-- stops at the first available command, so it never reaches its own osascript
+-- fallback. Supply the osascript commands directly. Neo-tree's built-in trash
+-- command then handles the confirmation, clears the buffer of each deleted
+-- file and fires FILE_DELETED.
+local function trash_command(paths)
+  local commands = {}
+  for i, path in ipairs(paths) do
+    local escaped = path:gsub("\\", "\\\\"):gsub('"', '\\"')
+    commands[i] = {
+      "osascript",
+      "-e",
+      'tell application "Finder" to delete POSIX file "' .. escaped .. '"',
+    }
   end
-  step(1)
-end
-
-local function confirm_and_trash(state, nodes)
-  local inputs = require("neo-tree.ui.inputs")
-  local label = #nodes == 1 and ("Trash " .. nodes[1].name .. "?") or ("Trash " .. #nodes .. " items?")
-  inputs.confirm(label, function(confirmed)
-    if not confirmed then
-      return
-    end
-    local paths = {}
-    for _, node in ipairs(nodes) do
-      paths[#paths + 1] = node.path
-    end
-    trash(paths, function()
-      require("neo-tree.sources.manager").refresh(state.source_name)
-    end)
-  end)
+  return commands
 end
 
 return {
   "nvim-neo-tree/neo-tree.nvim",
   opts = {
+    trash = {
+      command = trash_command,
+    },
     window = {
       number = true,
       relativenumber = false,
     },
     filesystem = {
-      commands = {
-        -- `d` on a single node
-        delete = function(state)
-          confirm_and_trash(state, { state.tree:get_node() })
-        end,
-        -- `d` on a visual selection. Without this override neo-tree falls back
-        -- to its built-in delete_visual, which permanently removes files.
-        delete_visual = function(state, selected_nodes)
-          confirm_and_trash(state, selected_nodes)
-        end,
-      },
       window = {
         mappings = {
+          -- `d` trashes instead of deleting permanently. Neo-tree resolves the
+          -- visual variant (trash_visual) from this same mapping, so it covers
+          -- a single node and a visual selection.
+          ["d"] = "trash",
           ["x"] = "cut_to_clipboard",
           ["p"] = "paste_from_clipboard",
           ["gy"] = function(state)
